@@ -1,0 +1,110 @@
+#include <iostream>
+#include <vector>
+
+std::vector<int> Merge(std::vector<int>& vec);
+
+std::vector<int> MergeSort (std::vector<int>& vec, std::size_t first, std::size_t end)
+{
+    if (first < end)
+    {
+        std::size_t middle = first + (end - first) / 2;
+        MergeSort(vec, first, middle);
+        MergeSort(vec, middle + 1, end);
+        return Merge(vec);
+    }
+    return vec;
+}
+
+std::vector<int> Merge(std::vector<int>& vec)
+{
+    auto middle = vec.size() / 2;
+    std::vector<int> result;
+    std::vector<int> Left(middle);
+
+
+
+    std::vector<int> Right(vec.size() - middle);
+
+    for (int i = 0; i < Right.size(); ++i)
+    {
+        Right[i] = vec[i];
+    }
+
+    for (int j = 0; j < vec.size() - middle; ++j)
+    {
+        Left[j] = vec[vec.size() - middle + j];
+    }
+
+    int i = 0;
+    int j = 0;
+
+    for (int k = 0; k < Left.size() - 1; ++k)
+    {
+        if (Left[k] > Left[k + 1])
+        {
+            std::swap(Left[k], Left[k + 1]);
+            k = -1;
+        }
+    }
+
+    for (int k = 0; k < Right.size() - 1; ++k)
+    {
+        if (Right[k] > Right[k + 1])
+        {
+            std::swap(Right[k], Right[k + 1]);
+            k = -1;
+        }
+    }
+
+    for (int k = 0; k < vec.size(); ++k)
+    {
+        if (Left[i] <= Right[j])
+        {
+            result.push_back(Left[i]);
+            ++i;
+            if (i >= Left.size())
+            {
+                break;
+            }
+        }
+        else
+        {
+            result.push_back(Right[j]);
+            ++j;
+            if (j >= Right.size())
+            {
+                break;
+            }
+        }
+    }
+
+    while (j < Right.size())
+    {
+        result.push_back(Right[j]);
+        ++j;
+    }
+
+    while (i < Left.size())
+    {
+        result.push_back(Left[i]);
+        ++i;
+    }
+    return result;
+}
+
+
+int main()
+{
+    std::vector<int> vec = {33, 72, 14, 58, 97, 25};
+    auto size = vec.size();
+    int first = 0;
+
+
+    auto vec1 = MergeSort(vec, first, size);
+
+    for (int i : vec1)
+    {
+        std::cout << i << " ";
+    }
+    return 0;
+}
